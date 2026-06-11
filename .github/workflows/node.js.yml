@@ -32,6 +32,7 @@ jobs:
   
   git-leaks-scan:
     runs-on: Agent-1
+    needs: build
     steps:
     - name: checkout code
       uses: actions/checkout@v4
