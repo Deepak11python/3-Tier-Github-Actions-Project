@@ -70,8 +70,8 @@ jobs:
       with:
         projectBaseDir: api
         args: >
-          -Dsonar.organization=my-organization # For SonarQube Cloud only
-          "-Dsonar.projectName=My Project"
+          -Dsonar.organization=sonarqube-gha # For SonarQube Cloud only
+          "-Dsonar.projectName=sonarqube-gha"
           -Dsonar.projectKey=my-projectkey
           -Dsonar.python.coverage.reportPaths=coverage.xml
           -Dsonar.sources=lib/
