@@ -59,4 +59,26 @@ jobs:
          format: table
          severity: HIGH,CRITICAL
          exit-code: 0
-      
+  
+  Front-end-SonarQube-scan:
+    runs-on: self-hosted
+    needs: trivy-scan 
+    steps:
+    - name: checkout node
+      uses: actions/checkout@v4
+    - uses: SonarSource/sonarqube-scan-action@<action version>
+      with:
+        projectBaseDir: api
+        args: >
+          -Dsonar.organization=my-organization # For SonarQube Cloud only
+          "-Dsonar.projectName=My Project"
+          -Dsonar.projectKey=my-projectkey
+          -Dsonar.python.coverage.reportPaths=coverage.xml
+          -Dsonar.sources=lib/
+          -Dsonar.tests=tests/
+          -Dsonar.test.exclusions=tests/**
+          -Dsonar.verbose=true
+      env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+    
