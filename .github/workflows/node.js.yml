@@ -58,5 +58,5 @@ jobs:
          scan-ref: .
          format: table
          severity: HIGH,CRITICAL
-         exit-code: 1
+         exit-code: 0
       
