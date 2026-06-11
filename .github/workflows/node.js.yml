@@ -48,18 +48,18 @@ jobs:
     runs-on: self-hosted
     needs: git-leaks-scan 
     steps:
-     - name: checkout node
+    - name: checkout node
       uses: actions/checkout@v4
       
-     - name: Install Trivy
-       run: |
+    - name: Install Trivy
+      run: |
           sudo apt-get updategit-leaks-scan
           steps:
           sudo apt-get install wget -y
           wget -qO- https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh
 
-     - name: Scan Repository
-       run: |
+    - name: Scan Repository
+      run: |
           trivy fs \
             --severity HIGH,CRITICAL \
             --exit-code 1 \
