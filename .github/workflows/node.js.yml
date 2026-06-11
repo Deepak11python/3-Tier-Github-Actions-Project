@@ -51,13 +51,8 @@ jobs:
     - name: checkout node
       uses: actions/checkout@v4
 
-   Trivy:
-
-    runs-on: self-hosted
-    needs: git-leaks-scan
-    steps: 
-     - name: Run Trivy FS Scan
-       uses: aquasecurity/trivy-action@0.33.1
+    - name: Run Trivy FS Scan
+      uses: aquasecurity/trivy-action@0.33.1
       with:
          scan-type: fs
          scan-ref: .
