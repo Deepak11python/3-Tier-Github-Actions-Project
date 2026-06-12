@@ -78,5 +78,22 @@ jobs:
         SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
 
+ Back-end-SonarQube-scan:
+    runs-on: self-hosted
+    needs: Front-end-SonarQube-scan
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Sonar Scan
+      uses: SonarSource/sonarqube-scan-action@v5
+      with:
+        projectBaseDir: client
+        args: >
+          -Dsonar.projectKey=my-project
+      env:
+        SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+
           
           
