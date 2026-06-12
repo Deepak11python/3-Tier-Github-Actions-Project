@@ -117,5 +117,7 @@ jobs:
         run: |
           docker build -t ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} ./api
           docker tag ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} \
-                     ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:latest        
+                     ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} \
+                     ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:latest
           
