@@ -63,19 +63,21 @@ jobs:
   
   Front-end-SonarQube-scan:
     runs-on: self-hosted
-    needs: trivy-scan 
+    needs: trivy-scan
+
     steps:
-    - name: checkout node
-      uses: actions/checkout@v4
-    
-    - name: Sonar Scan   
-      uses: SonarSource/sonarqube-scan-action@master
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Sonar Scan
+        uses: SonarSource/sonarqube-scan-action@v5
       with:
-             projectBaseDir: api
-             args: >
-              -Dsonar.projectKey=my-project
-              -Dsonar.organization=my-org
-        env:
+        projectBaseDir: api
+        args: >
+          -Dsonar.projectKey=my-project
+      env:
         SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
-    
+
+          
+          
