@@ -71,7 +71,7 @@ jobs:
 
       - name: Sonar Scan
         uses: SonarSource/sonarqube-scan-action@v5
-      with:
+        with:
         projectBaseDir: api
         args: >
           -Dsonar.projectKey=my-project
