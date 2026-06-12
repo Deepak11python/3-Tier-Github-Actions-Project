@@ -74,7 +74,6 @@ jobs:
           -Dsonar.organization=sonarqube-gha # For SonarQube Cloud only
           -Dsonar.projectName=sonarqube-gha
           -Dsonar.projectKey=my-projectkey
-
           -Dsonar.verbose=true
       env:
           SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
