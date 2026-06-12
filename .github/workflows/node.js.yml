@@ -66,7 +66,7 @@ jobs:
     steps:
     - name: checkout node
       uses: actions/checkout@v4
-    - uses: SonarSource/sonarqube-scan-action@<action version>
+    - uses: SonarSource/sonarqube-scan-action@v7
       with:
         projectBaseDir: api
         args: >
