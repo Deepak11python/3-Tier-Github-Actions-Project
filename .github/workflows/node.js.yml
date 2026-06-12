@@ -96,6 +96,7 @@ jobs:
 
   Docker_build_push:
     runs-on: ubuntu-latest
+    needs:  Back-end-SonarQube-scan
     env:
       IMAGE_NAME: my-app
 
