@@ -64,14 +64,13 @@ jobs:
   Front-end-SonarQube-scan:
     runs-on: self-hosted
     needs: trivy-scan
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Sonar Scan
-        uses: SonarSource/sonarqube-scan-action@v5
-        with:
+    - name: Sonar Scan
+      uses: SonarSource/sonarqube-scan-action@v5
+      with:
         projectBaseDir: api
         args: >
           -Dsonar.projectKey=my-project
