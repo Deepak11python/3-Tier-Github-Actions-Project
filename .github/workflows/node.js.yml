@@ -115,7 +115,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} ./api
-          docker tag ${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} \
+          docker build -t ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} ./api
+          docker tag ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} \
                      ${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest        
           
