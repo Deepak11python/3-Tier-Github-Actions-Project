@@ -154,6 +154,9 @@ jobs:
   trivy-fe-image-scan:
    runs-on: self-hosted
    needs: Docker_build_backend
+   env:
+      IMAGE_NAME: gitlab_front_backend
+
    steps:
     - name: checkout node
       uses: actions/checkout@v4
@@ -162,7 +165,7 @@ jobs:
       uses: aquasecurity/trivy-action@master
       with:
        scan-type: image
-       image-ref: goldedeepak/gitlab_demo_frontend:latest
+       image-ref: ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
        exit-code: 0
        scan-ref: .
        format: table
@@ -172,6 +175,9 @@ jobs:
   trivy-bk-image-scan:
     runs-on: self-hosted
     needs: Docker_build_backend
+    env:
+      IMAGE_NAME: gitlab_demo_backend
+
     steps:
      - name: checkout node
        uses: actions/checkout@v4
