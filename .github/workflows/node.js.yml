@@ -1,101 +1,109 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-# squ_09425f5ae82995b0bccda255f1ae990049ee02d6  
+# This workflow will do a clean installation of node dependencies, cache/restore them,
+# build the source code and run tests across different versions of node
+# For more information see:
+# https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+# squ_09425f5ae82995b0bccda255f1ae990049ee02d6
+
 name: Node.js CICD
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - "main"
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - "main"
 
 jobs:
   build:
     runs-on: self-hosted
     steps:
-    - name: checkout node
-      uses: actions/checkout@v4
-    
-    - name: setup node
-      uses: actions/setup-node@v4
-      with:
-        node-version: '24'
-    - name: frontend compilation(syntax check)
-      run: |
-        cd client
-        find . -name "*.js" -exec node --check {} +
-    - name: backend compilation (syntax check)
-      run: |
-        cd api
-        find . -name "*.js" -exec node --check {} +
-  
+      - name: checkout node
+        uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: frontend compilation(syntax check)
+        run: |
+          cd client
+          find . -name "*.js" -exec node --check {} +
+
+      - name: backend compilation (syntax check)
+        run: |
+          cd api
+          find . -name "*.js" -exec node --check {} +
+
   git-leaks-scan:
     runs-on: self-hosted
     needs: build
     steps:
-    - name: checkout code
-      uses: actions/checkout@v4
+      - name: checkout code
+        uses: actions/checkout@v4
 
-    - name: Run GitLeaks Setup
-      uses: gitleaks/gitleaks-action@v2
-    - name: Gitleaks Scan
-      run: |
-        gitleaks detect --source ./client --verbose --redact --exit-code 1
-        gitleaks detect --source ./api --verbose --redact --exit-code 1 
-  
+      - name: Run GitLeaks Setup
+        uses: gitleaks/gitleaks-action@v2
+
+      - name: Gitleaks Scan
+        run: |
+          gitleaks detect --source ./client --verbose --redact --exit-code 1
+          gitleaks detect --source ./api --verbose --redact --exit-code 1
+
   trivy-scan:
     runs-on: self-hosted
-    needs: git-leaks-scan 
+    needs: git-leaks-scan
     steps:
-    - name: checkout node
-      uses: actions/checkout@v4
+      - name: checkout node
+        uses: actions/checkout@v4
 
-    - name: Run Trivy FS Scan
-      uses: aquasecurity/trivy-action@master
-      with:
-         scan-type: fs
-         scan-ref: .
-         format: table
-         severity: HIGH,CRITICAL
-         exit-code: 0
-  
+      - name: Run Trivy FS Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: table
+          severity: HIGH,CRITICAL
+          exit-code: 0
+
   Front-end-SonarQube-scan:
     runs-on: self-hosted
     needs: trivy-scan
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Sonar Scan
-      uses: SonarSource/sonarqube-scan-action@v5
-      with:
-        projectBaseDir: api
-        args: >
-          -Dsonar.projectKey=my-project
-      env:
-        SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+      - name: Sonar Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        with:
+          projectBaseDir: api
+          args: >
+            -Dsonar.projectKey=my-project
+        env:
+          SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
 
   Back-end-SonarQube-scan:
     runs-on: self-hosted
     needs: Front-end-SonarQube-scan
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Sonar Scan
-      uses: SonarSource/sonarqube-scan-action@v5
-      with:
-        projectBaseDir: client
-        args: >
-          -Dsonar.projectKey=my-project
-      env:
-        SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+      - name: Sonar Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        with:
+          projectBaseDir: client
+          args: >
+            -Dsonar.projectKey=my-project
+        env:
+          SONAR_TOKEN: ${{ vars.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
 
   Docker_build_frontend:
     runs-on: ubuntu-latest
-    needs:  Back-end-SonarQube-scan
+    needs: Back-end-SonarQube-scan
     env:
       IMAGE_NAME: gitlab_demo_frontend
 
@@ -116,11 +124,11 @@ jobs:
         run: |
           docker build -t ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} ./api
           docker tag ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:latest
-          docker push ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} 
- 
+          docker push ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
+
   Docker_build_backend:
     runs-on: ubuntu-latest
-    needs:  Docker_build_backend
+    needs: Docker_build_backend
     env:
       IMAGE_NAME: gitlab_demo_backend
 
@@ -141,4 +149,4 @@ jobs:
         run: |
           docker build -t ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} ./client
           docker tag ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:latest
-          docker push ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}          
+          docker push ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
