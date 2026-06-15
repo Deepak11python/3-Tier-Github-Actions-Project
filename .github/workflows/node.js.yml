@@ -236,12 +236,12 @@ jobs:
         mkdir -p $HOME/.kube 
         echo "${{ vars.EKS_KUBECONFIG}}" > $HOME/.kube/config
       
-      - name: Deploy to EKS
+     - name: Deploy to EKS
        run: |
-        kubectl -f apply k8s-prod/
-        kubectl -f apply k8s-prod/
-        kubectl -f apply k8s-prod/
-        kubectl -f apply k8s-prod/
-        
-
+        kubectl -f apply k8s-prod/backend.yaml
+        kubectl -f apply k8s-prod/ci.yaml
+        kubectl -f apply k8s-prod/frontend.yaml
+        kubectl -f apply k8s-prod/backend.yaml
+        kubectl -f apply k8s-prod/ingress.yaml
+        kubectl -f apply k8s-prod/mysql.yaml
   
