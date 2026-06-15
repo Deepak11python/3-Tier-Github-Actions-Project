@@ -202,4 +202,31 @@ jobs:
         scan-ref: .
         format: table
         severity: HIGH,CRITICAL
-        vuln-type: os,library     
+        vuln-type: os,library
+      
+  deploy_to_kubernetes:
+    runs-on: self-hosted
+    needs: trivy-bk-image-scan
+    steps:
+     - name: checkout node
+       uses: actions/checkout@v4
+      
+     - name: Install AWS CLI if missing
+       run: |
+        if ! command -v aws >/dev/null 2>&1; then
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip -q awscliv2.zip
+        sudo ./aws/install
+        fi
+
+     - name: Configure AWS Credentials
+       uses: aws-actions/configure-aws-credentials@v4
+       with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    aws --version
+     
+
+  
