@@ -158,6 +158,11 @@ jobs:
       IMAGE_NAME: gitlab_front_backend
 
    steps:
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+          username: ${{ vars.DOCKER_USER_NAME }}
+          password: ${{ vars.DOCKER_PASSWORD }}
     - name: checkout node
       uses: actions/checkout@v4
 
@@ -181,6 +186,12 @@ jobs:
     steps:
      - name: checkout node
        uses: actions/checkout@v4
+
+     - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+          username: ${{ vars.DOCKER_USER_NAME }}
+          password: ${{ vars.DOCKER_PASSWORD }}
 
      - name: Run Trivy FS Scan
        uses: aquasecurity/trivy-action@master
