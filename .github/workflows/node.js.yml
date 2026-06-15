@@ -197,7 +197,7 @@ jobs:
        uses: aquasecurity/trivy-action@master
        with:
         scan-type: image
-        image-ref: goldedeepak/gitlab_demo_backend
+        image-ref: ${{ vars.DOCKER_USER_NAME }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
         exit-code: 0
         scan-ref: .
         format: table
