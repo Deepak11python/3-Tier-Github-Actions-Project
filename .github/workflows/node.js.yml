@@ -173,16 +173,16 @@ jobs:
     runs-on: self-hosted
     needs: Docker_build_backend
     steps:
-    - name: checkout node
-     uses: actions/checkout@v4
+     - name: checkout node
+       uses: actions/checkout@v4
 
-    - name: Run Trivy FS Scan
-     uses: aquasecurity/trivy-action@master
-     with:
-      scan-type: image
-      image-ref: goldedeepak/gitlab_demo_backend
-      exit-code: 0
-      scan-ref: .
-      format: table
-      severity: HIGH,CRITICAL
-      vuln-type: os,library     
+     - name: Run Trivy FS Scan
+       uses: aquasecurity/trivy-action@master
+       with:
+        scan-type: image
+        image-ref: goldedeepak/gitlab_demo_backend
+        exit-code: 0
+        scan-ref: .
+        format: table
+        severity: HIGH,CRITICAL
+        vuln-type: os,library     
