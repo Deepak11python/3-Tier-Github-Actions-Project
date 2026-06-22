@@ -244,4 +244,20 @@ jobs:
         kubectl apply -f k8s-prod/backend.yaml
         kubectl apply -f k8s-prod/ingress.yaml
         kubectl apply -f k8s-prod/mysql.yaml
-  
+    
+     - name: Send Slack Notification
+       if: always()
+       run: |
+        STATUS="${{ job.status }}"
+
+        if [ "$STATUS" = "success" ]; then
+         EMOJI="✅"
+        else
+         EMOJI="❌"
+        fi
+
+        curl -X POST -H 'Content-type: application/json' \
+        --data "{
+         \"text\":\"$EMOJI Pipeline $STATUS\nRepository: ${{ github.repository }}\nBranch: ${{ github.ref_name }}\nActor: ${{ github.actor }}\"
+         }" \
+        ${{ vars.SLACK_WEBHOOK_URL }}
