@@ -64,7 +64,7 @@ jobs:
 
          curl -X POST -H 'Content-type: application/json' \
          --data "{
-          \"text\":\"$EMOJI Pipeline $STATUS\nRepository: ${{ github.repository }}\nBranch: ${{ github.ref_name }}\nActor: ${{ github.actor }}\ ${{ github.run_id }}"
+          \"text\":\"$EMOJI Pipeline $STATUS\nRepository: ${{ github.repository }}\nBranch: ${{ github.ref_name }}\nActor: ${{ github.actor }}\nRUNID: ${{ github.run_id }}"
           }"  \
          ${{ vars.SLACK_URL }}
         
