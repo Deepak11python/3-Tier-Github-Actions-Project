@@ -50,7 +50,24 @@ jobs:
         run: |
           gitleaks detect --source ./client --verbose --redact --exit-code 1
           gitleaks detect --source ./api --verbose --redact --exit-code 1
+     
+      - name: Send Slack Notification
+       if: always()
+       run: |
+        STATUS="${{ job.status }}"
 
+        if [ "$STATUS" = "success" ]; then
+         EMOJI="✅"
+        else
+         EMOJI="❌"
+        fi
+
+        curl -X POST -H 'Content-type: application/json' \
+        --data "{
+         \"text\":\"$EMOJI Pipeline $STATUS\nRepository: ${{ github.repository }}\nBranch: ${{ github.ref_name }}\nActor: ${{ github.actor }}\"
+         }" \
+        ${{ vars.SLACK_URL }}
+        
   trivy-scan:
     runs-on: self-hosted
     needs: git-leaks-scan
