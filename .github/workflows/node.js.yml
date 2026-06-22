@@ -260,4 +260,4 @@ jobs:
         --data "{
          \"text\":\"$EMOJI Pipeline $STATUS\nRepository: ${{ github.repository }}\nBranch: ${{ github.ref_name }}\nActor: ${{ github.actor }}\"
          }" \
-        ${{ vars.SLACK_WEBHOOK_URL }}
+        ${{ vars.SLACK_URL }}
