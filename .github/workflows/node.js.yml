@@ -262,20 +262,22 @@ jobs:
         kubectl apply -f k8s-prod/ingress.yaml
         kubectl apply -f k8s-prod/mysql.yaml
 
-      send_slack_notification:
-       - name: Send Slack Notification
-        if: always()
-        run: |
-         STATUS="${{ job.status }}"
+  send_slack_notification:
+    runs-on: self-hosted
+    steps:
+      - name: Send Slack Notification
+       if: always()
+       run: |
+        STATUS="${{ job.status }}"
 
-         if [ "$STATUS" = "success" ]; then
-          EMOJI="✅"
-         else
-          EMOJI="❌"
-         fi
+        if [ "$STATUS" = "success" ]; then
+         EMOJI="✅"
+        else
+         EMOJI="❌"
+        fi
 
-         curl -X POST -H 'Content-type: application/json' \
-         --data "{
-         \"text\":\"$EMOJI Pipeline $STATUS\nRepository: ${{ github.repository }}\nBranch: ${{ github.ref_name }}\nActor: ${{ github.actor }}\"
-         }" \
+        curl -X POST -H 'Content-type: application/json' \
+        --data "{
+        \"text\":\"$EMOJI Pipeline $STATUS\nRepository: ${{ github.repository }}\nBranch: ${{ github.ref_name }}\nActor: ${{ github.actor }}\nRUNID: ${{ github.run_id }}\"
+        }" \
         ${{ vars.SLACK_URL }}
