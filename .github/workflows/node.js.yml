@@ -265,7 +265,7 @@ jobs:
   send_slack_notification:
     runs-on: self-hosted
     steps:
-      - name: Send Slack Notification
+     - name: Send Slack Notification
        if: always()
        run: |
         STATUS="${{ job.status }}"
